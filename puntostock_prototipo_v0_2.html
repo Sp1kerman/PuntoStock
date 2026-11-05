@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PuntoStock — Prototipo</title>
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#17231d;background:#f4f7f4}
+*{box-sizing:border-box}body{margin:0;background:#f4f7f4;color:#17231d}button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;font-weight:700;background:#176b45;color:white;min-height:44px}
+button.secondary{background:#e6eee8;color:#1c4b34;border:1px solid #d0ded3}
+button.light{background:white;color:#176b45;border:1px solid #cddbd0}
+button.danger{background:#fff0ef;color:#a52d28;border:1px solid #f0c6c3}
+.app{min-height:100vh;display:grid;grid-template-columns:240px 1fr}
+aside{background:#123e2b;color:white;padding:24px 16px;display:flex;flex-direction:column;gap:22px}
+.brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:850;letter-spacing:-.6px}.brandmark{width:38px;height:38px;border-radius:12px;background:#d6f0df;color:#145637;display:grid;place-items:center;font-size:21px}
+.tagline{font-size:12px;color:#b8d2c1;margin-top:-16px}
+nav{display:grid;gap:7px}nav button{display:flex;gap:12px;align-items:center;text-align:left;color:#e6f1e9;background:transparent;border:1px solid transparent;font-weight:650}nav button.active,nav button:hover{background:#24543c;border-color:#46785b}nav .ico{width:22px;text-align:center;font-size:18px}
+.sidebottom{margin-top:auto;border-top:1px solid #37634a;padding-top:16px;font-size:13px;color:#c5dccd}.avatar{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#d7f1df;color:#15482f;font-weight:800;margin-right:8px}
+main{min-width:0}.topbar{height:76px;background:#fff;border-bottom:1px solid #e0e8e1;display:flex;align-items:center;justify-content:space-between;padding:0 30px;gap:16px}.toptitle{font-size:14px;color:#6a786e}.topactions{display:flex;align-items:center;gap:12px}.iconbtn{background:white;color:#274634;border:1px solid #dce5de;padding:10px 13px;position:relative}.dot{position:absolute;right:7px;top:6px;width:8px;height:8px;border-radius:50%;background:#e58c30}
+.content{max-width:1280px;margin:auto;padding:28px 30px 48px}.welcome{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:24px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:#357652;font-weight:800}h1{font-size:clamp(25px,3vw,34px);letter-spacing:-1px;margin:5px 0 8px}h2{font-size:19px;letter-spacing:-.3px;margin:0 0 5px}p{margin:0;color:#69776d;line-height:1.5}.date{white-space:nowrap;background:white;border:1px solid #dfe7e0;border-radius:12px;padding:10px 14px;color:#536259;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}.stat,.panel{background:#fff;border:1px solid #e0e8e1;border-radius:17px;padding:20px;box-shadow:0 2px 5px #203a2705}.statlabel{font-size:13px;color:#69776d;display:flex;align-items:center;justify-content:space-between;gap:6px}.statnum{font-size:28px;font-weight:850;letter-spacing:-1px;margin:12px 0 3px}.statnote{font-size:12px;color:#758279}.staticon{background:#eaf4ed;color:#1c7548;border-radius:10px;padding:8px}
+.twocol{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;margin-bottom:18px}.panelhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px}.panelhead p{font-size:13px}.linkbtn{background:transparent;color:#176b45;padding:4px 0;min-height:0}.activity{display:grid;gap:0}.activityitem{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-top:1px solid #edf1ed}.activityitem:first-child{border-top:0;padding-top:0}.activityico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#eef5ef;font-size:18px;flex-shrink:0}.activitytext{flex:1;min-width:0}.activitytext strong{font-size:14px}.activitytext p{font-size:13px;margin-top:3px}.time{font-size:11px;color:#849087;white-space:nowrap}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#e7f4eb;color:#176b45;font-size:11px;font-weight:800}.pill.warn{background:#fff2dc;color:#9a5a08}.pill.gray{background:#edf0ed;color:#5d6a60}
+.quickgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.quick{background:#fff;border:1px solid #dfe7e0;border-radius:14px;padding:17px;text-align:left;color:#1b3224;display:flex;gap:12px;align-items:center;min-height:84px}.quick:hover{border-color:#82b293;background:#f8fcf9}.quick .qico{font-size:22px;background:#edf5ef;border-radius:11px;padding:10px}.quick strong{display:block;font-size:14px}.quick small{display:block;color:#758279;font-size:12px;margin-top:3px;font-weight:500}
+.tablewrap{overflow:auto;border:1px solid #e2e9e3;border-radius:13px}table{border-collapse:collapse;width:100%;min-width:650px}th,td{text-align:left;padding:13px 14px;border-bottom:1px solid #edf1ed;font-size:13px}th{background:#f7faf7;color:#657268;font-size:11px;text-transform:uppercase;letter-spacing:.5px}tr:last-child td{border-bottom:0}.productname{font-weight:750}.subtext{display:block;color:#7a867d;font-size:11px;margin-top:3px}.price{font-weight:800;white-space:nowrap}.actions{display:flex;gap:8px;flex-wrap:wrap}.smallbtn{min-height:34px;padding:7px 10px;font-size:12px}
+.view{display:none}.view.active{display:block}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:grid;gap:6px}.field label{font-size:13px;font-weight:750;color:#3a4a3e}.field input,.field select{width:100%;min-height:46px;border:1px solid #d5e0d7;border-radius:11px;padding:10px 12px;background:#fff;color:#17231d}.field input:focus,.field select:focus{outline:3px solid #d7efdf;border-color:#459565}.field.full{grid-column:1/-1}.hint{font-size:12px;color:#78847b}.formactions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.calcbox{background:#f2f8f3;border:1px solid #d7e8da;border-radius:14px;padding:16px;margin-top:16px}.calcrow{display:flex;justify-content:space-between;gap:16px;padding:6px 0;font-size:13px}.calcrow.total{border-top:1px solid #d5e4d8;margin-top:6px;padding-top:12px;font-size:17px;font-weight:850}.notice{padding:14px 16px;border-radius:12px;background:#e6f5e9;color:#17623a;border:1px solid #bfe3c8;margin-bottom:16px;display:none}.notice.show{display:block}.empty{padding:30px;text-align:center;color:#78847b}.toast{position:fixed;right:20px;bottom:20px;background:#173e2b;color:white;padding:15px 18px;border-radius:13px;box-shadow:0 8px 30px #0002;max-width:360px;display:none;z-index:5}.toast.show{display:block}.notificationlist{display:grid;gap:10px}.notification{padding:16px;border:1px solid #e0e8e1;border-radius:13px;display:flex;gap:12px;align-items:flex-start}.notification p{font-size:13px;margin-top:4px}.notification .actions{margin-top:10px}.searchrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.searchrow input{flex:1;min-width:180px;min-height:44px;padding:10px 12px;border:1px solid #d5e0d7;border-radius:11px}.footnote{font-size:12px;color:#7c887f;margin-top:14px}.hamburger{display:none}
+.modalback{position:fixed;inset:0;background:#102b1dcc;display:grid;place-items:center;padding:18px;z-index:20;overflow:auto}
+.modalback[hidden]{display:none}.modal{width:min(760px,100%);max-height:92vh;overflow:auto;background:#fff;border:1px solid #dce7de;border-radius:20px;padding:22px;box-shadow:0 20px 70px #0003}
+.modal .panelhead{align-items:flex-start}.modal .iconbtn{min-width:42px}.modal textarea{width:100%;min-height:88px;resize:vertical;border:1px solid #d5e0d7;border-radius:11px;padding:10px 12px;font:inherit}
+.modal .field input,.modal .field select{min-height:44px}.modal .field.full{grid-column:1/-1}
+.actionicon{display:inline-flex;align-items:center;gap:5px}.actions .secondary{white-space:nowrap}
+@media(max-width:520px){.modal{padding:16px;border-radius:16px}.modal .formgrid{grid-template-columns:1fr}.modal .field.full{grid-column:auto}.welcome .actions{margin-top:12px}.welcome .actions button{flex:1}}
+@media(max-width:900px){.app{grid-template-columns:1fr}aside{padding:14px 16px;gap:12px}.brand{font-size:20px}.tagline{display:none}nav{display:flex;overflow-x:auto;padding-bottom:2px}nav button{white-space:nowrap;padding:10px 12px;font-size:13px}nav .ico{font-size:16px}.sidebottom{display:none}.topbar{height:60px;padding:0 18px}.content{padding:22px 18px 36px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.twocol{grid-template-columns:1fr}}
+@media(max-width:520px){.content{padding:18px 13px 28px}.topbar{padding:0 13px}.welcome{display:block}.date{display:inline-block;margin-top:13px}.stats{gap:9px}.stat{padding:14px}.statnum{font-size:24px}.statlabel{font-size:12px}.staticon{padding:6px}.panel{padding:15px}.quickgrid{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.time{display:none}.topactions .userlabel{display:none}.topactions{gap:7px}.toptitle{font-size:12px}.tablewrap table{min-width:620px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><span class="brandmark">▦</span> PuntoStock</div>
+  <div class="tagline">Gestión simple para tu mercado</div>
+  <nav id="nav">
+    <button class="active" data-view="inicio"><span class="ico">⌂</span> Inicio</button>
+    <button data-view="productos"><span class="ico">▣</span> Productos</button>
+    <button data-view="cargar"><span class="ico">＋</span> Cargar compra</button>
+    <button data-view="proveedores"><span class="ico">▤</span> Proveedores</button>
+    <button data-view="informes"><span class="ico">▥</span> Precios e informes</button>
+    <button data-view="notificaciones"><span class="ico">♧</span> Notificaciones <span id="navcount" class="pill" style="margin-left:auto">2</span></button>
+  </nav>
+  <div class="sidebottom"><div><span class="avatar" id="avatar">D</span><strong id="sideuser">Dylan</strong></div><div style="margin:12px 0 0 4px">Prototipo interactivo · Datos de ejemplo</div></div>
+</aside>
+<main>
+  <header class="topbar">
+    <div class="toptitle">Mercado · Panel de gestión</div>
+    <div class="topactions">
+      <button class="iconbtn" aria-label="Notificaciones" onclick="showView('notificaciones')">♧ <span class="dot"></span></button>
+      <button class="light" id="userBtn" onclick="switchUser()">◉ <span class="userlabel" id="topuser">Dylan</span>⌄</button>
+    </div>
+  </header>
+  <div class="content">
+    <section class="view active" id="view-inicio">
+      <div class="welcome"><div><div class="eyebrow">Panel principal</div><h1>¡Hola, <span id="hello">Dylan</span>! 👋</h1><p>Esto es lo que está pasando hoy en el mercado.</p></div><div class="date" id="today"></div></div>
+      <div class="stats">
+        <div class="stat"><div class="statlabel">Productos activos <span class="staticon">▣</span></div><div class="statnum" id="statProducts">4</div><div class="statnote">En tu catálogo</div></div>
+        <div class="stat"><div class="statlabel">Compras registradas <span class="staticon">▤</span></div><div class="statnum" id="statBuys">2</div><div class="statnote">En este prototipo</div></div>
+        <div class="stat"><div class="statlabel">Precios a revisar <span class="staticon">↗</span></div><div class="statnum" id="statReview">2</div><div class="statnote">Competencia pendiente</div></div>
+        <div class="stat"><div class="statlabel">Actividad reciente <span class="staticon">◷</span></div><div class="statnum" id="statActivity">3</div><div class="statnote">Eventos registrados</div></div>
+      </div>
+      <div class="twocol">
+        <div class="panel"><div class="panelhead"><div><h2>Actividad reciente</h2><p>Movimientos del equipo</p></div><button class="linkbtn" onclick="showView('notificaciones')">Ver todo →</button></div><div class="activity" id="activityHome"></div></div>
+        <div class="panel"><div class="panelhead"><div><h2>Accesos rápidos</h2><p>¿Qué necesitás hacer?</p></div></div>
+          <div class="quickgrid">
+            <button class="quick" onclick="showView('cargar')"><span class="qico">＋</span><span><strong>Cargar compra</strong><small>Factura o remito</small></span></button>
+            <button class="quick" onclick="showView('productos')"><span class="qico">▣</span><span><strong>Ver productos</strong><small>Costos y precios</small></span></button>
+            <button class="quick" onclick="showView('informes')"><span class="qico">▥</span><span><strong>Precios e informes</strong><small>Comparar valores</small></span></button>
+            <button class="quick" onclick="showView('proveedores')"><span class="qico">▤</span><span><strong>Proveedores</strong><small>Reglas y datos</small></span></button>
+          </div>
+        </div>
+      </div>
+      <div class="panel"><div class="panelhead"><div><h2>Últimos productos actualizados</h2><p>Revisá el precio sugerido antes de definir el precio de venta.</p></div><button class="secondary smallbtn" onclick="showView('productos')">Ver catálogo</button></div><div id="homeTable"></div></div>
+      <p class="footnote">🔒 Esta demostración guarda los cambios en este navegador. Todavía no sincroniza datos con otros dispositivos.</p>
+    </section>
+
+    <section class="view" id="view-productos">
+      <div class="welcome"><div><div class="eyebrow">Catálogo</div><h1>Productos</h1><p>Consultá costos, sugerencias y precios finales elegidos por el equipo.</p></div><div class="actions"><button class="secondary" onclick="exportCSV()">⇩ Exportar a Excel / CSV</button><button onclick="showView('cargar')">＋ Cargar compra</button></div></div>
+      <div class="panel"><div class="searchrow"><input id="productSearch" placeholder="Buscar por producto o proveedor…" oninput="renderProducts()"><button class="secondary" onclick="openProductForm()">＋ Nuevo producto</button></div><div id="productsTable"></div></div>
+    </section>
+
+    <section class="view" id="view-cargar">
+      <div class="welcome"><div><div class="eyebrow">Nueva operación</div><h1>Cargar compra</h1><p>Ingresá los datos, revisá el cálculo y guardá cuando estén correctos.</p></div></div>
+      <div id="loadNotice" class="notice">✓ Carga exitosa. Los productos se agregaron al resumen.</div>
+      <div class="twocol">
+        <div class="panel"><div class="panelhead"><div><h2>Datos de la compra</h2><p>Los campos con * son obligatorios.</p></div><span class="pill">Paso 1 de 2</span></div>
+          <form id="buyForm">
+            <div class="formgrid">
+              <div class="field"><label for="supplier">Proveedor *</label><select id="supplier" required><option value="La Serenísima">La Serenísima</option><option value="Distribuidora Sur">Distribuidora Sur</option><option value="Mayorista Central">Mayorista Central</option><option value="Otro proveedor">Otro proveedor</option></select></div>
+              <div class="field"><label for="invoice">Tipo de comprobante</label><select id="invoice"><option>Factura A</option><option>Factura B</option><option>Factura C</option><option>Remito</option><option>Otro</option></select></div>
+              <div class="field"><label for="purchaseDate">Fecha de compra *</label><input id="purchaseDate" type="date" required></div>
+              <div class="field"><label for="productInput">Nombre del producto *</label><input id="productInput" placeholder="Ej. Galletitas Pitusas" required></div>
+              <div class="field"><label for="brandInput">Marca / presentación</label><input id="brandInput" placeholder="Ej. Chocolate, paquete"></div>
+              <div class="field"><label for="qty">Unidades por caja / paquete *</label><input id="qty" type="number" min="1" value="10" required></div>
+              <div class="field"><label for="totalCost">Costo total de la presentación ($) *</label><input id="totalCost" type="number" min="0.01" step="0.01" value="10000" required></div>
+              <div class="field"><label for="vat">Ajuste de IVA a aplicar</label><select id="vat"><option value="0">No aplicar ajuste</option><option value="21" selected>21%</option><option value="10.5">10,5%</option><option value="27">27%</option><option value="custom">Otro porcentaje…</option></select></div>
+              <div class="field" id="customVatWrap" style="display:none"><label for="customVat">IVA / ajuste personalizado (%)</label><input id="customVat" type="number" min="0" max="100" step=".1" value="21"></div>
+              <div class="field"><label for="markup">Recargo comercial (%)</label><input id="markup" type="number" min="0" max="500" step=".1" value="30"></div>
+              <div class="field"><label for="compPrice">Precio de competencia (opcional)</label><input id="compPrice" type="number" min="0" step=".01" placeholder="Ej. 1200"></div>
+              <div class="field"><label for="competitor">Comercio competidor (opcional)</label><select id="competitor"><option value="">No informado</option><option>Coto</option><option>Carrefour</option><option>Chino de la zona</option><option>Otro</option></select></div>
+            </div>
+            <div class="formactions"><button type="submit">✓ Revisar y guardar</button><button type="button" class="secondary" onclick="resetBuy()">Limpiar formulario</button></div>
+          </form>
+        </div>
+        <div class="panel"><div class="panelhead"><div><h2>Vista previa del cálculo</h2><p>La sugerencia no fija automáticamente el precio final.</p></div></div>
+          <div class="calcbox" id="calcPreview"></div>
+          <p class="footnote">El ajuste de IVA es configurable y debe verificarse según el comprobante, la operación y el asesoramiento contable. El recargo comercial no es lo mismo que el margen sobre el precio de venta.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-proveedores">
+      <div class="welcome"><div><div class="eyebrow">Configuración</div><h1>Proveedores</h1><p>Consultá las reglas de cálculo y los proveedores registrados.</p></div><button onclick="addSupplier()">＋ Nuevo proveedor</button></div>
+      <div class="panel"><div id="supplierTable"></div><p class="footnote">Las reglas son orientativas y editables; el tipo de factura por sí solo no determina qué ajuste corresponde.</p></div>
+    </section>
+
+    <section class="view" id="view-informes">
+      <div class="welcome"><div><div class="eyebrow">Control comercial</div><h1>Precios e informes</h1><p>Compará el precio elegido con las últimas observaciones de competencia.</p></div><div class="actions"><button class="secondary" onclick="exportCSV()">⇩ Exportar a Excel / CSV</button><button onclick="showView('productos')">Gestionar productos</button></div></div>
+      <div class="stats">
+        <div class="stat"><div class="statlabel">Productos con precio final</div><div class="statnum" id="reportFinal">3</div><div class="statnote">Definidos por el equipo</div></div>
+        <div class="stat"><div class="statlabel">Comparaciones registradas</div><div class="statnum" id="reportComp">1</div><div class="statnote">Con fecha de observación</div></div>
+        <div class="stat"><div class="statlabel">Revisiones sugeridas</div><div class="statnum" id="reportDue">2</div><div class="statnote">Revisar cada 30 días</div></div>
+        <div class="stat"><div class="statlabel">Última actualización</div><div class="statnum" style="font-size:22px" id="reportDate">Hoy</div><div class="statnote">Datos locales de demostración</div></div>
+      </div>
+      <div class="panel"><div class="panelhead"><div><h2>Comparación de precios</h2><p>Los precios de competencia son datos ingresados manualmente en este prototipo.</p></div><button class="secondary smallbtn" onclick="showView('productos')">Gestionar productos</button></div><div id="reportTable"></div></div>
+      <p class="footnote">No se consultan precios de comercios en tiempo real. El recordatorio de 30 días es una función simulada en esta versión.</p>
+    </section>
+
+    <section class="view" id="view-notificaciones">
+      <div class="welcome"><div><div class="eyebrow">Equipo</div><h1>Notificaciones</h1><p>Actividad de ejemplo y cambios realizados en esta sesión.</p></div><button class="secondary" onclick="markAllRead()">Marcar como leídas</button></div>
+      <div class="panel"><div class="panelhead"><div><h2>Actividad del mercado</h2><p>Al seleccionar un aviso, podés ir al informe relacionado.</p></div><span class="pill" id="unreadBadge">2 sin leer</span></div><div class="notificationlist" id="notificationList"></div><p class="footnote">Las notificaciones push con la app cerrada requieren configurar un servicio y permisos en el dispositivo; no están activas en este prototipo.</p></div>
+    </section>
+  </div>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modalback" id="editModal" hidden onclick="if(event.target===this)closeEditModal()">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="panelhead"><div><div class="eyebrow" id="editModalEyebrow">Edición</div><h2 id="editModalTitle">Editar registro</h2><p id="editModalDescription">Los cambios se guardan en este navegador.</p></div><button class="iconbtn" type="button" aria-label="Cerrar" onclick="closeEditModal()">✕</button></div>
+    <form id="editForm">
+      <div id="editFields" class="formgrid"></div>
+      <div class="formactions"><button type="submit">Guardar cambios</button><button type="button" class="secondary" onclick="closeEditModal()">Cancelar</button></div>
+    </form>
+  </section>
+</div>
+<script>
+const seedProducts=[
+{id:1,name:"Leche entera 1 L",brand:"La Serenísima",supplier:"La Serenísima",pack:1,total:1000,vat:0,markup:30,suggested:1300,final:1200,competitor:"Coto",compPrice:1199,compDate:"2026-10-20",date:"2026-10-24",by:"Melany"},
+{id:2,name:"Galletitas Pitusas",brand:"Caja x 10",supplier:"Distribuidora Sur",pack:10,total:10000,vat:21,markup:30,suggested:1573,final:1550,competitor:"Carrefour",compPrice:1490,compDate:"2026-09-12",date:"2026-10-25",by:"Dylan"},
+{id:3,name:"Aceite girasol 900 ml",brand:"Botella",supplier:"Mayorista Central",pack:1,total:1850,vat:0,markup:25,suggested:2312.5,final:2290,competitor:"",compPrice:null,compDate:"",date:"2026-10-22",by:"Dylan"},
+{id:4,name:"Yerba mate 1 kg",brand:"Paquete",supplier:"Distribuidora Sur",pack:1,total:2400,vat:0,markup:30,suggested:3120,final:3190,competitor:"Coto",compPrice:3099,compDate:"2026-10-21",date:"2026-10-21",by:"Melany"}
+];
+let products=JSON.parse(localStorage.getItem("ps_products")||"null")||seedProducts;
+products=products.map((p,i)=>({...p,code:p.code||("PS-"+String(p.id||i+1).padStart(4,"0")),category:p.category||inferCategory(p.name)}));
+const seedPurchases=[
+{id:"demo-purchase-1",productId:1,productName:"Leche entera 1 L",supplier:"La Serenísima",invoice:"Factura A",date:"2026-10-24",unitsPerPresentation:1,presentationCost:1000,by:"Melany"},
+{id:"demo-purchase-2",productId:2,productName:"Galletitas Pitusas",supplier:"Distribuidora Sur",invoice:"Factura B",date:"2026-10-25",unitsPerPresentation:10,presentationCost:10000,by:"Dylan"},
+{id:"demo-purchase-3",productId:3,productName:"Aceite girasol 900 ml",supplier:"Mayorista Central",invoice:"Remito",date:"2026-10-22",unitsPerPresentation:1,presentationCost:1850,by:"Dylan"}
+];
+const storedPurchases=localStorage.getItem("ps_purchases");
+let purchases=storedPurchases===null?seedPurchases.map(p=>({...p})):JSON.parse(storedPurchases);
+let suppliers=JSON.parse(localStorage.getItem("ps_suppliers")||"null")||[
+{name:"La Serenísima",vat:0,markup:30,notes:"Verificar por producto"},
+{name:"Distribuidora Sur",vat:21,markup:30,notes:"Regla orientativa editable"},
+{name:"Mayorista Central",vat:0,markup:25,notes:"Regla orientativa editable"},
+{name:"Otro proveedor",vat:0,markup:30,notes:"Configurar al registrar"}
+];
+let activities=JSON.parse(localStorage.getItem("ps_activities")||"null")||[
+{title:"Melany actualizó un precio",desc:"Leche entera 1 L · Precio final $1.200",time:"Hoy · 09:42",icon:"↗",unread:true},
+{title:"Dylan cargó unos productos",desc:"Galletitas Pitusas · 10 unidades por caja",time:"Hoy · 09:18",icon:"▣",unread:true},
+{title:"Se revisaron precios de competencia",desc:"Aceite girasol 900 ml",time:"Ayer · 17:30",icon:"▥",unread:false}
+];
+let currentUser=localStorage.getItem("ps_user")||"Dylan";
+const money=n=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:2}).format(Number(n)||0);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const todayISO=()=>{let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+function save(){localStorage.setItem("ps_products",JSON.stringify(products));localStorage.setItem("ps_purchases",JSON.stringify(purchases));localStorage.setItem("ps_suppliers",JSON.stringify(suppliers));localStorage.setItem("ps_activities",JSON.stringify(activities));localStorage.setItem("ps_user",currentUser)}
+function toast(msg){let t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500)}
+function showView(v){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.getElementById("view-"+v).classList.add("active");document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.view===v));if(v==="productos")renderProducts();if(v==="informes")renderReports();if(v==="proveedores")renderSuppliers();if(v==="notificaciones")renderNotifications();if(v==="inicio")renderHome();window.scrollTo({top:0,behavior:"smooth"})}
+document.getElementById("nav").addEventListener("click",e=>{let b=e.target.closest("button[data-view]");if(b)showView(b.dataset.view)});
+function switchUser(){currentUser=currentUser==="Dylan"?"Melany":currentUser==="Melany"?"Encargado":"Dylan";save();updateUser();toast("Vista de demostración: ahora sos "+currentUser+".")}
+function updateUser(){document.getElementById("hello").textContent=currentUser;document.getElementById("topuser").textContent=currentUser;document.getElementById("sideuser").textContent=currentUser;document.getElementById("avatar").textContent=currentUser[0];}
+function fmtDate(d){if(!d)return "—";let [y,m,day]=d.split("-");return `${day}/${m}/${y}`}
+function calc(){let total=Number(document.getElementById("totalCost").value)||0,qty=Math.max(1,Number(document.getElementById("qty").value)||1),v=document.getElementById("vat").value,vat=v==="custom"?(Number(document.getElementById("customVat").value)||0):Number(v),markup=Number(document.getElementById("markup").value)||0,unit=total/qty,withVat=unit*(1+vat/100),suggest=withVat*(1+markup/100);return{total,qty,vat,markup,unit,withVat,suggest}}
+function renderCalc(){let c=calc();document.getElementById("customVatWrap").style.display=document.getElementById("vat").value==="custom"?"grid":"none";document.getElementById("calcPreview").innerHTML=`<div class="calcrow"><span>Costo total de presentación</span><strong>${money(c.total)}</strong></div><div class="calcrow"><span>Unidades por presentación</span><strong>${c.qty}</strong></div><div class="calcrow"><span>Costo unitario</span><strong>${money(c.unit)}</strong></div><div class="calcrow"><span>Ajuste aplicado (${c.vat}%)</span><strong>${money(c.withVat-c.unit)}</strong></div><div class="calcrow"><span>Subtotal tras ajuste</span><strong>${money(c.withVat)}</strong></div><div class="calcrow"><span>Recargo comercial (${c.markup}%)</span><strong>${money(c.withVat*c.markup/100)}</strong></div><div class="calcrow total"><span>Sugerido por unidad</span><strong>${money(c.suggest)}</strong></div><div class="calcrow"><span>Sugerido por presentación</span><strong>${money(c.suggest*c.qty)}</strong></div>`}
+["totalCost","qty","vat","customVat","markup"].forEach(id=>document.getElementById(id).addEventListener("input",renderCalc));
+function inferCategory(name){let n=String(name||"").toLowerCase();if(/leche|queso|yogur|manteca|crema/.test(n))return "Lácteos";if(/gallet|pitusa|alfajor|chocolate|caramelo/.test(n))return "Golosinas y galletitas";if(/aceite|yerba|arroz|fideo|harina|azúcar|azucar/.test(n))return "Almacén";return "General"}
+function unitCost(p){return (Number(p.total)||0)/(Number(p.pack)||1)}
+function calculateSuggested(p){return Math.round(unitCost(p)*(1+(Number(p.vat)||0)/100)*(1+(Number(p.markup)||0)/100)*100)/100}
+function productRows(list){if(!list.length)return '<div class="empty">No encontramos productos con esa búsqueda.</div>';return `<div class="tablewrap"><table><thead><tr><th>Código / producto</th><th>Costo unitario</th><th>IVA / ajuste</th><th>Recargo</th><th>Precio sugerido</th><th>Precio final</th><th>Acciones</th></tr></thead><tbody>${list.map(p=>`<tr><td><span class="productname">${esc(p.name)}</span><span class="subtext">${esc(p.code||("PS-"+p.id))} · ${esc(p.category||"General")} · ${esc(p.supplier)} </span><span class="subtext">${esc(p.brand||"Sin presentación")} · Carga ${fmtDate(p.date)}</span>${(p.tiers||[]).length?`<span class="subtext">Volumen: ${(p.tiers||[]).map(t=>`${t.qty}+ u. ${money(t.price)}`).join(" · ")}</span>`:""}</td><td class="price">${money(unitCost(p))}</td><td>${Number(p.vat)||0}%</td><td>${Number(p.markup)||0}%</td><td class="price">${money(p.suggested)}</td><td>${p.final?`<span class="price">${money(p.final)}</span>`:'<span class="pill warn">Pendiente</span>'}</td><td><div class="actions"><button class="secondary smallbtn" title="Editar producto" onclick="editProduct(${p.id})">✎ Editar</button><button class="light smallbtn" onclick="editPricing(${p.id})">Precio / margen</button></div></td></tr>`).join("")}</tbody></table></div>`}
+function renderProducts(){let q=(document.getElementById("productSearch")?.value||"").toLowerCase();let list=products.filter(p=>(p.name+" "+p.brand+" "+p.supplier+" "+(p.category||"")+" "+(p.code||"")).toLowerCase().includes(q));document.getElementById("productsTable").innerHTML=productRows(list)}
+function renderHome(){document.getElementById("statProducts").textContent=products.length;document.getElementById("statBuys").textContent=purchases.length;document.getElementById("statReview").textContent=products.filter(p=>!p.compDate||daysSince(p.compDate)>=30).length;document.getElementById("statActivity").textContent=activities.length;document.getElementById("homeTable").innerHTML=productRows(products.slice().sort((a,b)=>b.id-a.id).slice(0,4));document.getElementById("activityHome").innerHTML=activities.slice(0,4).map(a=>`<div class="activityitem"><div class="activityico">${a.icon}</div><div class="activitytext"><strong>${esc(a.title)}</strong><p>${esc(a.desc)}</p></div><span class="time">${esc(a.time)}</span></div>`).join("");document.getElementById("navcount").textContent=activities.filter(a=>a.unread).length}
+function daysSince(d){if(!d)return 999;return Math.floor((new Date(todayISO())-new Date(d))/86400000)}
+function addActivity(title,desc,icon="✎"){activities.unshift({title,desc,time:"Ahora",icon,unread:true});}
+function openEditModal(kind,title,description,fields,onSave){
+  const modal=document.getElementById("editModal"),wrap=document.getElementById("editFields");
+  document.getElementById("editModalEyebrow").textContent=kind;
+  document.getElementById("editModalTitle").textContent=title;
+  document.getElementById("editModalDescription").textContent=description;
+  wrap.innerHTML=fields.map(f=>`<div class="field ${f.full?"full":""}"><label for="${esc(f.id)}">${esc(f.label)}</label>${f.type==="textarea"?`<textarea id="${esc(f.id)}" name="${esc(f.id)}" ${f.required?"required":""} placeholder="${esc(f.placeholder||"")}">${esc(f.value??"")}</textarea>`:f.type==="select"?`<select id="${esc(f.id)}" name="${esc(f.id)}" ${f.required?"required":""}>${f.options.map(o=>`<option value="${esc(o.value)}" ${String(o.value)===String(f.value)?"selected":""}>${esc(o.label)}</option>`).join("")}</select>`:`<input id="${esc(f.id)}" name="${esc(f.id)}" type="${f.type||"text"}" value="${esc(f.value??"")}" ${f.min!==undefined?`min="${f.min}"`:""} ${f.max!==undefined?`max="${f.max}"`:""} ${f.step?`step="${f.step}"`:""} ${f.required?"required":""} ${f.placeholder?`placeholder="${esc(f.placeholder)}"`:""}>`}</div>`).join("");
+  modal.hidden=false;
+  const form=document.getElementById("editForm");
+  form.onsubmit=(e)=>{e.preventDefault();const data=Object.fromEntries(new FormData(form).entries());if(onSave(data)!==false){closeEditModal();save();renderAll();}};
+  setTimeout(()=>wrap.querySelector("input,select,textarea")?.focus(),30);
+}
+function closeEditModal(){document.getElementById("editModal").hidden=true}
+function editProduct(id){
+  let p=products.find(x=>x.id===id);if(!p)return;
+  openEditModal("Catálogo","Editar producto","Actualizá los datos del artículo. El precio sugerido se recalcula al guardar.",[
+    {id:"name",label:"Nombre del producto",value:p.name,required:true},
+    {id:"code",label:"ID / código",value:p.code||("PS-"+p.id),required:true},
+    {id:"category",label:"Categoría",value:p.category||"General",required:true},
+    {id:"supplier",label:"Proveedor",type:"select",value:p.supplier,options:[...new Set([...suppliers.map(s=>s.name),p.supplier])].map(x=>({value:x,label:x}))},
+    {id:"brand",label:"Marca / presentación",value:p.brand||""},
+    {id:"pack",label:"Unidades por presentación",type:"number",min:1,step:1,value:p.pack||1,required:true},
+    {id:"unitCost",label:"Costo unitario ($)",type:"number",min:0.01,step:0.01,value:unitCost(p),required:true},
+    {id:"vat",label:"IVA / ajuste (%)",type:"number",min:0,max:100,step:0.1,value:p.vat||0,required:true},
+    {id:"markup",label:"Recargo comercial (%)",type:"number",min:0,max:500,step:0.1,value:p.markup||0,required:true},
+    {id:"final",label:"Precio final por unidad ($)",type:"number",min:0,step:0.01,value:p.final??"",placeholder:"Dejar vacío si aún no está definido"},
+    {id:"tiers",label:"Precios por volumen (una regla por línea: cantidad:precio unitario)",type:"textarea",full:true,value:(p.tiers||[]).map(t=>`${t.qty}:${t.price}`).join("\n"),placeholder:"Ej. 10:1500\n20:1400"}
+  ],d=>{
+    const pack=Number(d.pack),cost=Number(d.unitCost),vat=Number(d.vat),markup=Number(d.markup);
+    if(!d.name.trim()||!d.code.trim()||!d.category.trim()||pack<1||cost<=0||vat<0||markup<0){toast("Revisá nombre, código, presentación, costo y porcentajes.");return false}
+    let tiers=[];for(const line of d.tiers.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){let m=line.match(/^(\d+(?:\.\d+)?)\s*:\s*(\d+(?:\.\d+)?)$/);if(!m||Number(m[1])<1||Number(m[2])<=0){toast("Escala inválida. Usá cantidad:precio, por ejemplo 10:1500.");return false}tiers.push({qty:Number(m[1]),price:Number(m[2])})}
+    const finalPrice=d.final.trim()===""?null:Number(d.final);
+    if(finalPrice!==null&&(!Number.isFinite(finalPrice)||finalPrice<=0)){toast("El precio final debe ser mayor que cero o quedar vacío.");return false}
+    p.name=d.name.trim();p.code=d.code.trim();p.category=d.category.trim();p.supplier=d.supplier;p.brand=d.brand.trim();p.pack=pack;p.total=cost*pack;p.vat=vat;p.markup=markup;p.suggested=calculateSuggested(p);p.final=finalPrice;p.tiers=tiers.sort((a,b)=>a.qty-b.qty);
+    addActivity(`${currentUser} editó un producto`,`${p.name} · costo unitario ${money(cost)} · sugerido ${money(p.suggested)}`);
+    toast("Producto guardado. Los indicadores se actualizaron.");
+  });
+}
+function editPricing(id){
+  let p=products.find(x=>x.id===id);if(!p)return;
+  openEditModal("Edición rápida","Precio y margen","Podés ajustar el recargo, el precio final y los tramos por cantidad sin salir de la lista.",[
+    {id:"markup",label:"Recargo comercial (%)",type:"number",min:0,max:500,step:0.1,value:p.markup||0,required:true},
+    {id:"final",label:"Precio final por unidad ($)",type:"number",min:0,step:0.01,value:p.final??"",placeholder:"Dejar vacío si está pendiente"},
+    {id:"tiers",label:"Escalas de precio por volumen (cantidad:precio unitario)",type:"textarea",full:true,value:(p.tiers||[]).map(t=>`${t.qty}:${t.price}`).join("\n"),placeholder:"Ej. 10:1500\n20:1400"}
+  ],d=>{
+    const markup=Number(d.markup);if(!Number.isFinite(markup)||markup<0||markup>500){toast("Ingresá un recargo válido entre 0 y 500%.");return false}
+    let tiers=[];for(const line of d.tiers.split(/\r?\n/).map(x=>x.trim()).filter(Boolean)){let m=line.match(/^(\d+(?:\.\d+)?)\s*:\s*(\d+(?:\.\d+)?)$/);if(!m||Number(m[1])<1||Number(m[2])<=0){toast("Escala inválida. Usá cantidad:precio, por ejemplo 10:1500.");return false}tiers.push({qty:Number(m[1]),price:Number(m[2])})}
+    const final=d.final.trim()===""?null:Number(d.final);if(final!==null&&(!Number.isFinite(final)||final<=0)){toast("El precio final debe ser mayor que cero o quedar vacío.");return false}
+    p.markup=markup;p.suggested=calculateSuggested(p);p.final=final;p.tiers=tiers.sort((a,b)=>a.qty-b.qty);
+    addActivity(`${currentUser} actualizó precios`,`${p.name} · recargo ${markup}% · ${tiers.length} tramo(s) por volumen`);
+    toast("Precio, margen y escalas guardados.");
+  });
+}
+function editFinal(id){editPricing(id)}
+function openProductForm(){showView("cargar");document.getElementById("productInput").focus();toast("Completá la compra para registrar un producto nuevo.")}
+function resetBuy(){document.getElementById("buyForm").reset();document.getElementById("purchaseDate").value=todayISO();document.getElementById("loadNotice").classList.remove("show");applySupplierDefaults()}
+function applySupplierDefaults(){
+  const supplier=suppliers.find(s=>s.name===document.getElementById("supplier").value);
+  if(!supplier)return;
+  const vatSelect=document.getElementById("vat"),customVat=document.getElementById("customVat");
+  const vatValue=String(supplier.vat),hasVatOption=[...vatSelect.options].some(option=>option.value===vatValue);
+  vatSelect.value=hasVatOption?vatValue:"custom";
+  customVat.value=supplier.vat;
+  document.getElementById("markup").value=supplier.markup;
+  renderCalc();
+}
+document.getElementById("supplier").addEventListener("change",applySupplierDefaults);
+document.getElementById("buyForm").addEventListener("submit",e=>{e.preventDefault();let c=calc(),name=document.getElementById("productInput").value.trim();if(!name||c.total<=0||c.qty<1){toast("Revisá el nombre, costo y cantidad.");return}let comp=Number(document.getElementById("compPrice").value)||null;const purchaseId=Date.now();let p={id:purchaseId,code:"PS-"+String(purchaseId).slice(-6),name,category:inferCategory(name),brand:document.getElementById("brandInput").value.trim(),supplier:document.getElementById("supplier").value,pack:c.qty,total:c.total,vat:c.vat,markup:c.markup,suggested:Math.round(c.suggest*100)/100,final:null,tiers:[],competitor:document.getElementById("competitor").value,compPrice:comp,compDate:comp?todayISO():"",date:document.getElementById("purchaseDate").value,by:currentUser};let purchase={id:purchaseId,productId:p.id,productName:p.name,supplier:p.supplier,invoice:document.getElementById("invoice").value,date:p.date,unitsPerPresentation:c.qty,presentationCost:c.total,by:currentUser};products.unshift(p);purchases.unshift(purchase);activities.unshift({title:`${currentUser} cargó una compra`,desc:`${name} · ${document.getElementById("invoice").value} · ${c.qty} unidad(es) por presentación`,time:"Ahora",icon:"▣",unread:true});save();document.getElementById("loadNotice").classList.add("show");document.getElementById("loadNotice").scrollIntoView({behavior:"smooth",block:"center"});renderAll();toast("Compra registrada. Revisá el precio sugerido y definí el precio final.");setTimeout(()=>{showView("productos");toast("Compra cargada. Definí el precio de venta cuando lo revises.")},900);});
+function renderSuppliers(){document.getElementById("supplierTable").innerHTML=`<div class="tablewrap"><table><thead><tr><th>Proveedor</th><th>Ajuste predeterminado</th><th>Recargo comercial</th><th>Observación</th><th>Acción</th></tr></thead><tbody>${suppliers.map((s,i)=>`<tr><td class="productname">${esc(s.name)}</td><td>${s.vat}%</td><td>${s.markup}%</td><td>${esc(s.notes||"—")}</td><td><button class="secondary smallbtn" onclick="editSupplier(${i})">✎ Editar</button></td></tr>`).join("")}</tbody></table></div>`}
+function editSupplier(i){
+  const s=suppliers[i];if(!s)return;
+  openEditModal("Proveedores","Editar proveedor","Los valores son reglas orientativas: verificá su aplicación en cada compra.",[
+    {id:"name",label:"Nombre del proveedor",value:s.name,required:true},
+    {id:"vat",label:"IVA / ajuste predeterminado (%)",type:"number",min:0,max:100,step:0.1,value:s.vat,required:true},
+    {id:"markup",label:"Recargo comercial predeterminado (%)",type:"number",min:0,max:500,step:0.1,value:s.markup,required:true},
+    {id:"notes",label:"Observación",value:s.notes||"",full:true}
+  ],d=>{
+    const name=d.name.trim(),vat=Number(d.vat),markup=Number(d.markup);
+    if(!name||!Number.isFinite(vat)||vat<0||vat>100||!Number.isFinite(markup)||markup<0||markup>500){toast("Revisá el nombre y los porcentajes.");return false}
+    if(suppliers.some((x,j)=>j!==i&&x.name.toLowerCase()===name.toLowerCase())){toast("Ya existe un proveedor con ese nombre.");return false}
+    const oldName=s.name;s.name=name;s.vat=vat;s.markup=markup;s.notes=d.notes.trim();
+    products.forEach(p=>{if(p.supplier===oldName)p.supplier=name});
+    addActivity(`${currentUser} editó un proveedor`,`${oldName} → ${name}`);
+    toast("Proveedor actualizado.");
+  });
+}
+function addSupplier(){
+  openEditModal("Proveedores","Nuevo proveedor","Definí valores iniciales; se pueden corregir en cada compra.",[
+    {id:"name",label:"Nombre del proveedor",required:true},
+    {id:"vat",label:"IVA / ajuste predeterminado (%)",type:"number",min:0,max:100,step:0.1,value:0,required:true},
+    {id:"markup",label:"Recargo comercial predeterminado (%)",type:"number",min:0,max:500,step:0.1,value:30,required:true},
+    {id:"notes",label:"Observación",full:true}
+  ],d=>{
+    const name=d.name.trim(),vat=Number(d.vat),markup=Number(d.markup);
+    if(!name||!Number.isFinite(vat)||vat<0||vat>100||!Number.isFinite(markup)||markup<0||markup>500){toast("Revisá el nombre y los porcentajes.");return false}
+    if(suppliers.some(s=>s.name.toLowerCase()===name.toLowerCase())){toast("Ese proveedor ya existe.");return false}
+    suppliers.push({name,vat,markup,notes:d.notes.trim()});addActivity(`${currentUser} agregó un proveedor`,name);toast("Proveedor agregado.");
+  });
+}
+function renderReports(){document.getElementById("reportFinal").textContent=products.filter(p=>p.final).length;document.getElementById("reportComp").textContent=products.filter(p=>p.compPrice).length;document.getElementById("reportDue").textContent=products.filter(p=>!p.compDate||daysSince(p.compDate)>=30).length;document.getElementById("reportDate").textContent="Hoy";document.getElementById("reportTable").innerHTML=`<div class="tablewrap"><table><thead><tr><th>Producto</th><th>Precio propio</th><th>Competidor</th><th>Precio competencia</th><th>Fecha observada</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${products.map(p=>{let due=!p.compDate||daysSince(p.compDate)>=30;return `<tr><td class="productname">${esc(p.name)}${(p.tiers||[]).length?`<span class="subtext">${(p.tiers||[]).map(t=>`${t.qty}+ u. ${money(t.price)}`).join(" · ")}</span>`:""}</td><td class="price">${p.final?money(p.final):'<span class="pill warn">Pendiente</span>'}</td><td>${esc(p.competitor||"Sin dato")}</td><td>${p.compPrice?money(p.compPrice):"—"}</td><td>${fmtDate(p.compDate)}</td><td><span class="pill ${due?"warn":" " }">${due?"Revisar":"Registrado"}</span></td><td><div class="actions"><button class="secondary smallbtn" onclick="editPricing(${p.id})">✎ Editar precio</button><button class="light smallbtn" onclick="editProduct(${p.id})">Producto</button></div></td></tr>`}).join("")}</tbody></table></div>`}
+function exportCSV(){let headers=["ID/Código","Producto","Categoría","Proveedor","Costo Unitario","IVA/Ajuste (%)","Recargo (%)","Precio Sugerido","Precio Final","Marca/Presentación","Unidades por presentación","Costo total presentación","Fecha de compra","Competidor","Precio competencia","Fecha observación","Escalas por volumen","Usuario carga"];let rows=products.map(p=>[p.code||("PS-"+p.id),p.name,p.category||"General",p.supplier,unitCost(p),p.vat,p.markup,p.suggested,p.final??"",p.brand||"",p.pack,p.total,p.date,p.competitor||"",p.compPrice??"",p.compDate||"", (p.tiers||[]).map(t=>`${t.qty}+:${t.price}`).join(" | "),p.by||""]);let csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";")).join("\r\n");let blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});let url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="puntostock-productos.csv";a.click();URL.revokeObjectURL(url);toast("CSV compatible con Excel generado.")}
+function renderNotifications(){document.getElementById("notificationList").innerHTML=activities.map((a,i)=>`<div class="notification"><div class="activityico">${a.icon}</div><div style="flex:1"><strong>${esc(a.title)}</strong>${a.unread?' <span class="pill">Nueva</span>':''}<p>${esc(a.desc)}</p><p class="time" style="display:block;margin-top:6px">${esc(a.time)}</p><div class="actions"><button class="secondary smallbtn" onclick="showView('informes')">Consultar informe →</button>${a.unread?`<button class="light smallbtn" onclick="markRead(${i})">Marcar leída</button>`:""}</div></div></div>`).join("")||'<div class="empty">No hay notificaciones todavía.</div>';document.getElementById("unreadBadge").textContent=activities.filter(a=>a.unread).length+" sin leer";document.getElementById("navcount").textContent=activities.filter(a=>a.unread).length}
+function markRead(i){activities[i].unread=false;save();renderNotifications();renderHome()}
+function markAllRead(){activities.forEach(a=>a.unread=false);save();renderNotifications();renderHome();toast("Todas las notificaciones están marcadas como leídas.")}
+function renderAll(){updateUser();renderHome();renderProducts();renderSuppliers();renderReports();renderNotifications();syncSupplierOptions()}
+function syncSupplierOptions(){const sel=document.getElementById("supplier");if(!sel)return;const current=sel.value;sel.innerHTML=suppliers.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join("")+`<option value="Otro proveedor">Otro proveedor</option>`;if([...sel.options].some(o=>o.value===current))sel.value=current}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEditModal()});
+document.getElementById("today").textContent=new Intl.DateTimeFormat("es-AR",{weekday:"short",day:"numeric",month:"short",year:"numeric"}).format(new Date());
+document.getElementById("purchaseDate").value=todayISO();renderCalc();renderAll();applySupplierDefaults();save();
+</script>
+</body>
+</html>
